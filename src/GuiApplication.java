@@ -61,10 +61,6 @@ public class GuiApplication implements ActionListener, ListSelectionListener {
     }
 
     void open() {
-//    	modelArray = new GuiModel[3];
-//    	for(int i = 0; i < 3; i++){
-//        	modelArray[i] = new GuiModel(City.values()[i]);
-//    	}
         model = new GuiModel();
         model.setColumns(ChicagoDataLabelArray);
         GuiLoginDialog loginDialog = new GuiLoginDialog(model);
