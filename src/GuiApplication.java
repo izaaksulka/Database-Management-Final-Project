@@ -127,23 +127,9 @@ public class GuiApplication implements ActionListener, ListSelectionListener {
         buttonPane.setLayout(new FlowLayout());
         cp.add(buttonPane, BorderLayout.SOUTH);
 
-        addArtistButton = new JButton("Add Artist");
-        addArtistButton.addActionListener(this);
-        addAlbumButton = new JButton("Add Album");
-        addAlbumButton.addActionListener(this);
-        editAlbumButton = new JButton("Edit Album");
-        editAlbumButton.setEnabled(false);
-        editAlbumButton.addActionListener(this);
-        deleteAlbumButton = new JButton("Delete Album");
-        deleteAlbumButton.setEnabled(false);
-        deleteAlbumButton.addActionListener(this);
         quitButton = new JButton("Quit");
         quitButton.addActionListener(this);
 
-//        buttonPane.add(addArtistButton);
-//        buttonPane.add(addAlbumButton);
-//        buttonPane.add(editAlbumButton);
-//        buttonPane.add(deleteAlbumButton);
         buttonPane.add(quitButton);
 
         frame.pack();
@@ -154,7 +140,6 @@ public class GuiApplication implements ActionListener, ListSelectionListener {
      // process action events
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == this.searchButton) {
-        	System.out.println("action performed, calling search");
             search();
         }
         else if (e.getSource() == this.addArtistButton) {
@@ -185,7 +170,20 @@ public class GuiApplication implements ActionListener, ListSelectionListener {
     static Object[] LADataLabelArray = {"Date", "Description", "Address", "Zip"};
     static Object[] ChicagoDataLabelArray = {"Date", "Description", "Block"};
     static Object[] DenverDataLabelArray = {"Date", "Description", "Address", "Neighborhood"};
-    
+    static public int currentCityColumnCount(City city){
+    	switch(city){
+		case Chicago:
+			return ChicagoDataLabelArray.length;
+		case Denver:
+			return DenverDataLabelArray.length;
+		case LA:
+			return LADataLabelArray.length;
+		default:
+			break;
+    	}
+    	System.out.println("failed to match city in currentCityColumnCount(City)");
+    	return -1;
+    }
     private void updateDataLabels(City c){
     	switch(c){
 		case Chicago:
@@ -234,49 +232,17 @@ public class GuiApplication implements ActionListener, ListSelectionListener {
     	}
     }
     private void ChicagoSearchByOptions(){
-    	searchType.addItem("Chicago 1");
-    	searchType.addItem("Chicago 2");
+    	for(int i = 0; i < ChicagoDataLabelArray.length; i++){
+    		searchType.addItem(ChicagoDataLabelArray[i]);
+    	}
     }
     private void DenverSearchByOptions(){
-    	searchType.addItem("Denver 1");
-    	searchType.addItem("Denver 2");
+    	for(int i = 0; i < DenverDataLabelArray.length; i++){
+    		searchType.addItem(DenverDataLabelArray[i]);
+    	}
     }
-//    private void deleteAlbum() {
-//        if (JOptionPane.showConfirmDialog(frame,
-//                "Are you sure?",
-//                "Delete Album",
-//                JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-//            try {
-//                model.deleteAlbum(model.getAlbumID());
-//                model.removeSelectedRow();
-//            } catch (SQLException e) {
-//                sqlExceptionHandler(e);
-//            }
-//        }
-//    }
 
-//    private void editAlbum() {
-//        GuiEditAlbumDialog dlg = new GuiEditAlbumDialog(model);
-//        dlg.openForEdit(model.getAlbumID(), model.getArtist(), model.getAlbumTitle(), model.getAlbumYear());
-//    }
-//
-//    private void addAlbum() {
-//        GuiEditAlbumDialog dlg = new GuiEditAlbumDialog(model);
-//        //dlg.openForInsert();
-//    }
-
-//    private void addArtist() {
-//        String artist = JOptionPane.showInputDialog(frame, "Enter artist name:");
-//        try {
-//            model.insertArtist(artist);
-//        } catch (SQLException e) {
-//            sqlExceptionHandler(e);
-//        }
-//    }
-
-    
     private void search() {
-    	System.out.println("GuiApplication search()");
     	City c = City.valueOf((String)citySelection.getSelectedItem());
         try {
             model.search(c, (String)searchType.getSelectedItem(), searchText.getText());
